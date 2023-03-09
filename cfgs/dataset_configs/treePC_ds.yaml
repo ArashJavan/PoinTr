@@ -1,4 +1,5 @@
-NAME: TreePC
+NAME: TreePCDataset
 N_POINTS: 16384
-PARTIAL_POINTS_PATH: data/TreePC/%s/partial/%s.pcd
-COMPLETE_POINTS_PATH: data/TreePC/%s/gt/%s.pcd
+DATA_PATH: data/TreePC/%s
+PARTIAL_POINTS_PATH: data/TreePC/%s/partial/%s
+COMPLETE_POINTS_PATH: data/TreePC/%s/gt/%s

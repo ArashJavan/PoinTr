@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Inference",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tools/inference.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["cfgs/treePC_models/PoinTr.yaml", "ckpts/pointr_training_from_scratch_c55_best.pth", "--pc_root", "../Datasets/TreePC/test/partial", "--save_vis_img", "--out_pc_root", "inference_result"]
+        },
+        {
+            "name": "Train",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--config", "${workspaceFolder}/cfgs/treePC_models/PCN.yaml", "--exp_name", "example"]
+        },
+    ]
+}
