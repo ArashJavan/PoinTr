@@ -1,0 +1,20 @@
+name: env-pcl
+
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - open3d-admin
+
+dependencies:
+  - python=3.9
+  - pytorch
+  - torchvision
+  - pytorch-cuda=11.7
+  - gcc=10.4
+  - gxx=10.4
+  - cudatoolkit-dev=11.7
+  - open3d
+  - pip
+  - pip:
+    - -r requirements.txt

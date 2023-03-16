@@ -45,7 +45,7 @@ class TreePCDataset(data.Dataset):
 
         model_id = "tree_model"
         taxonomy_id = "tree"
-        return model_id, taxonomy_id, (gt_data, partial_data)
+        return model_id, taxonomy_id, (partial_data, gt_data)
 
     def __len__(self):
         return len(self.file_list)

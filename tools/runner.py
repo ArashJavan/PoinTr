@@ -107,6 +107,9 @@ def run_net(args, config, train_writer=None, val_writer=None):
                 gt = data.cuda()
                 partial, _ = misc.seprate_point_cloud(gt, npoints, [int(npoints * 1/4) , int(npoints * 3/4)], fixed_points = None)
                 partial = partial.cuda()
+            elif 'TreePC' in dataset_name:
+                partial = data[0].cuda()
+                gt = data[1].cuda()
             else:
                 raise NotImplementedError(f'Train phase do not support {dataset_name}')
 
