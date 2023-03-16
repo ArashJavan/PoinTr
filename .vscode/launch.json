@@ -28,7 +28,7 @@
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["--config", "${workspaceFolder}/cfgs/treePC_models/PCN.yaml", "--exp_name", "example"]
+            "args": ["--config", "${workspaceFolder}/cfgs/treePC_models/PoinTr.yaml", "--exp_name", "example", "--deterministic"]
         },
     ]
 }
