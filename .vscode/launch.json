@@ -19,7 +19,7 @@
             "program": "${workspaceFolder}/tools/inference.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["cfgs/treePC_models/PoinTr.yaml", "ckpts/pointr_training_from_scratch_c55_best.pth", "--pc_root", "../Datasets/TreePC/test/partial", "--save_vis_img", "--out_pc_root", "inference_result"]
+            "args": ["cfgs/PCN_models/AdaPoinTr.yaml", "experiments/AdaPoinTr/treePC_models/tree_adapointr_1/ckpt-last.pth", "--pc_root", "demo_tree/partial", "--save_vis_img", "--out_pc_root", "inference_result"]
         },
         {
             "name": "Train",
@@ -28,7 +28,36 @@
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["--config", "${workspaceFolder}/cfgs/treePC_models/PoinTr.yaml", "--exp_name", "example", "--deterministic"]
+            "args": ["--config", "${workspaceFolder}/cfgs/PCN_models/AdaPoinTr.yaml", 
+                    "--exp_name", "train_c55",
+                    "--num_workers", "16",
+                    "--deterministic"]
+        },
+        {
+            "name": "Train Tree",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--config", "${workspaceFolder}/cfgs/treePC_models/AdaPoinTr.yaml",
+                     "--start_ckpts", "${workspaceFolder}/ckpts/AdaPoinTr_PCN.pth",
+                     "--exp_name", "tree_ada",
+                     "--num_workers", "16",
+                     "--deterministic"]
+        },
+        {
+            "name": "Test",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--test", 
+                    "--ckpts", "${workspaceFolder}/ckpts/pointr_training_from_scratch_c55_best.pth", 
+                    "--config", "${workspaceFolder}/cfgs/ShapeNet55_models/PoinTr.yaml", 
+                    "--exp_name", "test_c55",
+                    "--mode", "easy"]
         },
     ]
 }

@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import os
 import json
+from torchinfo import summary
 from tools import builder
 from utils import misc, dist_utils
 import time
@@ -9,6 +10,10 @@ from utils.logger import *
 from utils.AverageMeter import AverageMeter
 from utils.metrics import Metrics
 from extensions.chamfer_dist import ChamferDistanceL1, ChamferDistanceL2
+
+
+#### Debug
+import open3d as o3d
 
 def run_net(args, config, train_writer=None, val_writer=None):
     logger = get_logger(args.log_name)
@@ -71,7 +76,8 @@ def run_net(args, config, train_writer=None, val_writer=None):
     if args.resume:
         builder.resume_optimizer(optimizer, args, logger = logger)
     scheduler = builder.build_scheduler(base_model, optimizer, config, last_epoch=start_epoch-1)
-
+  
+    counter = 0
     # trainval
     # training
     base_model.zero_grad()
@@ -90,7 +96,7 @@ def run_net(args, config, train_writer=None, val_writer=None):
 
         base_model.train()  # set model to training mode
         n_batches = len(train_dataloader)
-        for idx, (taxonomy_ids, model_ids, data) in enumerate(train_dataloader):
+        for idx, (taxonomy_ids, model_ids, data) in enumerate(train_dataloader):            
             data_time.update(time.time() - batch_start_time)
             npoints = config.dataset.train._base_.N_POINTS
             dataset_name = config.dataset.train._base_.NAME
@@ -114,9 +120,33 @@ def run_net(args, config, train_writer=None, val_writer=None):
                 raise NotImplementedError(f'Train phase do not support {dataset_name}')
 
             num_iter += 1
-           
+            
+            if counter == 0:
+                n, d = partial.shape[1:]
+                print(summary(base_model, input_size=(1, n, d)))
+                counter += 1
+                       
             ret = base_model(partial)
             
+            ### Debug
+            # if idx % 100 == 0:
+            #     gt_npy = gt.detach().to("cpu").numpy()[0]
+            #     pcd_gt = o3d.geometry.PointCloud()
+            #     pcd_gt.points = o3d.utility.Vector3dVector(gt_npy)
+                
+            #     partial_npy = partial.detach().to("cpu").numpy()[0]
+            #     partial_npy[:, 0] += 1
+            #     pcd_partial = o3d.geometry.PointCloud()
+            #     pcd_partial.points = o3d.utility.Vector3dVector(partial_npy)
+                
+            #     pred_npy = ret[1].detach().to("cpu").numpy()[0]
+            #     pred_npy[:, 0] += 2
+            #     pcd_pred = o3d.geometry.PointCloud()
+            #     pcd_pred.points = o3d.utility.Vector3dVector(pred_npy)
+            #     o3d.visualization.draw_geometries([pcd_gt, pcd_partial, pcd_pred])                
+            #     #o3d.io.write_point_cloud(os.path.join(target_path, "fine.pcd"), pcd)
+            ### End Debug
+                
             sparse_loss, dense_loss = base_model.module.get_loss(ret, gt, epoch)
          
             _loss = sparse_loss + dense_loss 
